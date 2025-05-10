@@ -192,6 +192,67 @@
       background: #e2e8f0;
       color: #4a5568;
     }
+    
+    /* Action Button Styling */
+    .action-button {
+      background-color: #3182ce; /* Light greennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn */
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-button:hover {
+      background-color: #2b6cb0; /* Darker green on hover */
+      transform: scale(1.05); /* Slight scale effect */
+    }
+
+    /* Green Button in the Quote Container */
+    .quote-container .action-button {
+      background-color: #3182ce; /* Light greennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn */
+      color: white;
+      font-size: 1em;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+	
+	
+	
+
+    .quote-container .action-button:hover {
+      background-color: #2b6cb0; /* Darker green on hover */
+      transform: scale(1.05); /* Slight scale effect */
+    }
+
+    .quote-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap; /* Allows wrapping on smaller screens */
+      margin-top: 20px;
+    }
+
+    #quote-box {
+      background-color: #f7f7f7;
+      border-left: 5px solid #2b6cb0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      flex-grow: 1;  /* Allows it to take up remaining space */
+      font-style: italic;
+      font-size: 1em;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      white-space: nowrap;  /* Prevent text wrapping */
+      overflow: hidden;     /* Ensures overflow is hidden */
+      text-overflow: ellipsis; /* If quote is too long, shows "..." */
+    }
   </style>
 </head>
 <body>
@@ -200,10 +261,9 @@
     <h1>Welcome to FitFusion!</h1>
     <p>Track your progress, crush your goals, and transform your body with our state-of-the-art fitness platform.</p>
     <div class="cta-buttons">
-	  <button onclick="location.href='workoutSetup.html'">Log Workout</button>
+      <button onclick="location.href='workoutSetup.html'">Log Workout</button>
       <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
-	  <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
-	  
+      <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
     </div>
   </header>
 
@@ -231,6 +291,9 @@
       </div>
     </div>
 
+
+	
+	
     <div class="section">
       <h2>Fuel Your Motivation ✴️</h2>
       <div class="gallery">
@@ -240,7 +303,22 @@
         <img src="https://media.tenor.com/IGi1JdHwtJsAAAAM/pumped-workout.gif" alt="Female Workout">
       </div>
     </div>
-
+	
+	
+	
+	
+	
+<div class="quote-container">
+	  <button class="action-button" onclick="getQuote()">Get A Motivational Quote</button>
+	  <div id="quote-box">
+	    <p id="quote"></p>
+	  </div>
+	</div>
+	
+	
+	
+	
+	
     <div class="section">
       <h2>Success Stories ❣️</h2>
       <div class="reviews">
@@ -257,44 +335,51 @@
       </div>
     </div>
 	
-	<button onclick = getData()> 
-	button 
-	
-	</button> 
-	<p id = "dummy"> 
-	</p>
-	
-	<script> 
-	
+	<script>
 	async function getData() {
-    const url = "https://backend-1-6j4p.onrender.com/todos/1"; 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+	    const url = "https://backend-1-6j4p.onrender.com/todos/1"; 
+	    try {
+	        const response = await fetch(url);
+	        if (!response.ok) {
+	            throw new Error(`Response status: ${response.status}`);
+	        }
 
-        const json = await response.json();
-        const a = document.getElementById("dummy");
+	        const json = await response.json();
+	        const a = document.getElementById("dummy");
 
-        // Display both title and userId
-        a.innerHTML = `Title: ${json.title} <br> User ID: ${json.userId}`;
-        
-        console.log(json);
-    } catch (error) {
-        console.error("Error:", error.message);
-    }
-}
+	        // Display both title and userId
+	        a.innerHTML = `Title: ${json.title} <br> User ID: ${json.userId}`;
+	        
+	        console.log(json);
+	    } catch (error) {
+	        console.error("Error:", error.message);
+	    }
+	}
 
-	</script> 
+	async function getQuote() {
+	    const url = "https://backend-1-6j4p.onrender.com/inspire"; 
+	    try {
+	        const response = await fetch(url);
+	        if (!response.ok) {
+	            throw new Error(`Response status: ${response.status}`);
+	        }
 
+	        const json = await response.json();
+	        const b = document.getElementById("quote");
 
+	        // Display the inspirational quote
+	        b.innerHTML = `Quote: "${json.quote}"`;
+	        
+	        console.log(json);
+	    } catch (error) {
+	        console.error("Error:", error.message);
+	    }
+	}
+	</script>
 
   </main>
-
   <footer>
-    &copy; 2025 FitFusion. Stay strong, stay consistent.
+    <p>FitFusion - Your fitness journey starts here.</p>
   </footer>
-
 </body>
 </html>
