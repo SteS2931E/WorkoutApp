@@ -44,14 +44,12 @@
       margin-bottom: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-	
-	 .cta-buttons {
+    .cta-buttons {
       display: flex;
       justify-content: center;
       gap: 15px;
       margin-top: 20px;
     }
-
     .cta-buttons button {
       background-color: #3182ce;
       border: none;
@@ -62,7 +60,6 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     .cta-buttons button:hover {
       background-color: #2b6cb0;
     }
@@ -71,80 +68,95 @@
 <body>
 
 <header>
-    
-    <div class="cta-buttons">
-	<button onclick="location.href='index.html'">Home</button>
-      <button onclick="location.href='workoutSetup.html'">Log Workout</button>
-      <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
-      <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
-    </div>
-  </header>
-  
-  <br>
-  
-  <div class="container">
-    <h1 style="text-align: center;">🏋️ Workout Tracker</h1>
+  <div class="cta-buttons">
+    <button onclick="location.href='index.html'">Home</button>
+    <button onclick="location.href='workoutSetup.html'">Log Workout</button>
+    <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
+    <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
+  </div>
+</header>
 
-    <form id="workoutForm">
-      <h2>Add New Workout</h2>
-      <input type="text" name="name" placeholder="Workout Name" required />
-      <input type="text" name="duration" placeholder="Duration (e.g. 45 mins)" required />
-      <select name="type" required>
-        <option value="">Select Type</option>
-        <option value="Cardio">Cardio</option>
-        <option value="Strength">Strength</option>
-        <option value="Flexibility">Flexibility</option>
-        <option value="HIIT">HIIT</option>
-      </select>
-      <button type="submit">Add Workout</button>
-    </form>
+<br>
 
-    <div id="workoutList">
-      <h2>Workout Log</h2>
-      <p id="noWorkouts">No workouts logged yet.</p>
-    </div>
+<div class="container">
+  <h1 style="text-align: center;">🏋️ Workout Tracker</h1>
+
+  <form id="workoutForm">
+    <h2>Add New Workout For Today</h2>
+    <input type="text" name="name" placeholder="Workout Name" required />
+    <input type="text" name="duration" placeholder="Duration (e.g. 45 mins)" required />
+    <select name="type" required>
+      <option value="">Select Type</option>
+      <option value="Cardio">Cardio</option>
+      <option value="Strength">Strength</option>
+      <option value="Flexibility">Flexibility</option>
+      <option value="HIIT">HIIT</option>
+    </select>
+    <button type="submit">Add Workout</button>
+  </form>
+
+  <div id="workoutList">
+    <h2>Workout Log</h2>
+    <p id="noWorkouts">No workouts logged yet.</p>
   </div>
 
-  <script>
-    const workoutForm = document.getElementById('workoutForm');
-    const workoutList = document.getElementById('workoutList');
-    const noWorkoutsMsg = document.getElementById('noWorkouts');
+  <button id="generateWorkoutBtn">Generate AI Workout</button>
+  <div id="aiWorkout"></div>
+</div>
 
-    let workouts = [];
+<script>
+  const workoutForm = document.getElementById('workoutForm');
+  const workoutList = document.getElementById('workoutList');
+  const noWorkoutsMsg = document.getElementById('noWorkouts');
+  const aiWorkoutDiv = document.getElementById('aiWorkout');
+  const generateWorkoutBtn = document.getElementById('generateWorkoutBtn');
 
-    workoutForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = workoutForm.name.value.trim();
-      const duration = workoutForm.duration.value.trim();
-      const type = workoutForm.type.value;
+  let workouts = [];
 
-      if (!name || !duration || !type) return;
+  workoutForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = workoutForm.name.value.trim();
+    const duration = workoutForm.duration.value.trim();
+    const type = workoutForm.type.value;
 
-      const workout = { id: Date.now(), name, duration, type };
-      workouts.push(workout);
-      renderWorkouts();
-      workoutForm.reset();
-    });
+    if (!name || !duration || !type) return;
 
-    function renderWorkouts() {
-      const existingItems = workoutList.querySelectorAll('.workout');
-      existingItems.forEach(item => item.remove());
+    const workout = { id: Date.now(), name, duration, type };
+    workouts.push(workout);
+    renderWorkouts();
+    workoutForm.reset();
+  });
 
-      if (workouts.length === 0) {
-        noWorkoutsMsg.style.display = 'block';
-      } else {
-        noWorkoutsMsg.style.display = 'none';
-        workouts.forEach(w => {
-          const workoutItem = document.createElement('div');
-          workoutItem.className = 'workout';
-          workoutItem.innerHTML = `
-            <p><strong>${w.name}</strong></p>
-            <p>${w.duration} - <span style="font-style: italic; color: gray;">${w.type}</span></p>
-          `;
-          workoutList.appendChild(workoutItem);
-        });
-      }
+  function renderWorkouts() {
+    const existingItems = workoutList.querySelectorAll('.workout');
+    existingItems.forEach(item => item.remove());
+
+    if (workouts.length === 0) {
+      noWorkoutsMsg.style.display = 'block';
+    } else {
+      noWorkoutsMsg.style.display = 'none';
+      workouts.forEach(w => {
+        const workoutItem = document.createElement('div');
+        workoutItem.className = 'workout';
+        workoutItem.innerHTML = `
+          <p><strong>${w.name}</strong></p>
+          <p>${w.duration} - <span style="font-style: italic; color: gray;">${w.type}</span></p>
+        `;
+        workoutList.appendChild(workoutItem);
+      });
     }
-  </script>
+  }
+
+  generateWorkoutBtn.addEventListener('click', async () => {
+    try {
+      const response = await fetch('http://localhost:5000/generate-workout');
+      const data = await response.json();
+      aiWorkoutDiv.innerHTML = `<h3>AI Suggested Workout:</h3><p>${data.workout}</p>`;
+    } catch (error) {
+      aiWorkoutDiv.innerHTML = `<p>Error generating workout. Please try again later.</p>`;
+    }
+  });
+</script>
+
 </body>
 </html>
