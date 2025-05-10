@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🏋️ FitFusion - Workout Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+  
+  
   <style>
     body {
       margin: 0;
@@ -261,6 +263,7 @@
     <h1>Welcome to FitFusion!</h1>
     <p>Track your progress, crush your goals, and transform your body with our state-of-the-art fitness platform.</p>
     <div class="cta-buttons">
+	<button onclick="location.href='index.html'">Home</button>
       <button onclick="location.href='workoutSetup.html'">Log Workout</button>
       <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
       <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
@@ -294,16 +297,23 @@
 
 	
 	
-    <div class="section">
-      <h2>Fuel Your Motivation ✴️</h2>
-      <div class="gallery">
-        <img src="https://mir-s3-cdn-cf.behance.net/projects/404/6560e8207844559.Y3JvcCwzNTA4LDI3NDMsMCwxMTEx.png" alt="Strength Training">
-        <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/blogs/2147506871/images/2808d8-b643-4a84-3140-01fa7828d03_Arnold-Schwarzenegger-photo-Arnold-Gym-by-official-website.png.webp" alt="Running Motivation">
-        <img src="https://i.pinimg.com/474x/0b/44/1c/0b441c810039cd890e0306c72f810a00.jpg" alt="HIIT Workout">
-        <img src="https://media.tenor.com/IGi1JdHwtJsAAAAM/pumped-workout.gif" alt="Female Workout">
-      </div>
-    </div>
-	
+    <div class="section"> 
+  <h2>Fuel Your Motivation ✴️</h2>
+  <div class="gallery">
+    <a href="https://www.youtube.com/watch?v=uNN62f55EV0&ab_channel=AestheticsSoldiers" target="_blank">
+      <img src="https://mir-s3-cdn-cf.behance.net/projects/404/6560e8207844559.Y3JvcCwzNTA4LDI3NDMsMCwxMTEx.png" alt="Strength Training">
+    </a>
+    <a href="https://www.youtube.com/watch?v=h0ABOGyELN0&ab_channel=MulliganBrothers" target="_blank">
+      <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/blogs/2147506871/images/2808d8-b643-4a84-3140-01fa7828d03_Arnold-Schwarzenegger-photo-Arnold-Gym-by-official-website.png.webp" alt="Running Motivation">
+    </a>
+    <a href="https://www.youtube.com/watch?v=uT0lRbX1vpo&ab_channel=MAKAVELI%2aMOTIVATION" target="_blank">
+      <img src="https://i.pinimg.com/474x/0b/44/1c/0b441c810039cd890e0306c72f810a00.jpg" alt="HIIT Workout">
+    </a>
+    
+      <img src="https://media.tenor.com/IGi1JdHwtJsAAAAM/pumped-workout.gif" alt="Female Workout">
+    
+  </div>
+</div>
 	
 	
 	
@@ -314,6 +324,9 @@
 	    <p id="quote"></p>
 	  </div>
 	</div>
+	<br>
+    <br>
+		
 	
 	
 	
@@ -337,7 +350,7 @@
 	
 	<script>
 	async function getData() {
-	    const url = "https://backend-1-6j4p.onrender.com/todos/1"; 
+	    const url = "http://127.0.0.1:5000/todos/1"; 
 	    try {
 	        const response = await fetch(url);
 	        if (!response.ok) {
@@ -357,7 +370,7 @@
 	}
 
 	async function getQuote() {
-	    const url = "https://backend-1-6j4p.onrender.com/inspire"; 
+	    const url = "http://127.0.0.1:5000/inspire"; 
 	    try {
 	        const response = await fetch(url);
 	        if (!response.ok) {
