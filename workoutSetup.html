@@ -149,7 +149,7 @@
 
   generateWorkoutBtn.addEventListener('click', async () => {
     try {
-      const response = await fetch('http://localhost:5000/generate-workout');
+      const response = await fetch('https://backend-1-6j4p.onrender.com/generate-workout');
       const data = await response.json();
       aiWorkoutDiv.innerHTML = `<h3>AI Suggested Workout:</h3><p>${data.workout}</p>`;
     } catch (error) {
