@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    input, select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .workout {
+      background: #fff;
+      padding: 12px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align: center;">🏋️ Workout Tracker</h1>
+
+    <form id="workoutForm">
+      <h2>Add New Workout</h2>
+      <input type="text" name="name" placeholder="Workout Name" required />
+      <input type="text" name="duration" placeholder="Duration (e.g. 45 mins)" required />
+      <select name="type" required>
+        <option value="">Select Type</option>
+        <option value="Cardio">Cardio</option>
+        <option value="Strength">Strength</option>
+        <option value="Flexibility">Flexibility</option>
+        <option value="HIIT">HIIT</option>
+      </select>
+      <button type="submit">Add Workout</button>
+    </form>
+
+    <div id="workoutList">
+      <h2>Workout Log</h2>
+      <p id="noWorkouts">No workouts logged yet.</p>
+    </div>
+  </div>
+
+  <script>
+    const workoutForm = document.getElementById('workoutForm');
+    const workoutList = document.getElementById('workoutList');
+    const noWorkoutsMsg = document.getElementById('noWorkouts');
+
+    let workouts = [];
+
+    workoutForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = workoutForm.name.value.trim();
+      const duration = workoutForm.duration.value.trim();
+      const type = workoutForm.type.value;
+
+      if (!name || !duration || !type) return;
+
+      const workout = { id: Date.now(), name, duration, type };
+      workouts.push(workout);
+      renderWorkouts();
+      workoutForm.reset();
+    });
+
+    function renderWorkouts() {
+      const existingItems = workoutList.querySelectorAll('.workout');
+      existingItems.forEach(item => item.remove());
+
+      if (workouts.length === 0) {
+        noWorkoutsMsg.style.display = 'block';
+      } else {
+        noWorkoutsMsg.style.display = 'none';
+        workouts.forEach(w => {
+          const workoutItem = document.createElement('div');
+          workoutItem.className = 'workout';
+          workoutItem.innerHTML = `
+            <p><strong>${w.name}</strong></p>
+            <p>${w.duration} - <span style="font-style: italic; color: gray;">${w.type}</span></p>
+          `;
+          workoutList.appendChild(workoutItem);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

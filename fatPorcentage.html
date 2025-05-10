@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Body Fat Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .flex-inputs {
+      display: flex;
+      gap: 10px;
+    }
+    .flex-inputs input {
+      flex: 1;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Body Fat Calculator</h1>
+    <form id="bfForm">
+      <label for="gender">Gender:</label>
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <label for="age">Age (years):</label>
+      <input type="number" id="age" min="1" required />
+
+      <label>Height:</label>
+      <div class="flex-inputs">
+        <input type="number" id="heightFeet" placeholder="Feet" min="0" required />
+        <input type="number" id="heightInches" placeholder="Inches" min="0" max="11" required />
+      </div>
+
+      <label>Neck Circumference:</label>
+      <div class="flex-inputs">
+        <input type="number" id="neckFeet" placeholder="Feet" min="0" required />
+        <input type="number" id="neckInches" placeholder="Inches" min="0" max="11" required />
+      </div>
+
+      <label>Waist Circumference:</label>
+      <div class="flex-inputs">
+        <input type="number" id="waistFeet" placeholder="Feet" min="0" required />
+        <input type="number" id="waistInches" placeholder="Inches" min="0" max="11" required />
+      </div>
+
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weight" min="1" step="0.1" required />
+
+      <button type="submit">Calculate Body Fat %</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('bfForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const gender = document.getElementById('gender').value;
+      const age = parseFloat(document.getElementById('age').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+
+      const heightFeet = parseFloat(document.getElementById('heightFeet').value);
+      const heightInches = parseFloat(document.getElementById('heightInches').value);
+      const totalHeightInches = (heightFeet * 12) + heightInches;
+      const heightCm = totalHeightInches * 2.54;
+
+      const neckFeet = parseFloat(document.getElementById('neckFeet').value);
+      const neckInches = parseFloat(document.getElementById('neckInches').value);
+      const neckInchesTotal = (neckFeet * 12) + neckInches;
+      const neckCm = neckInchesTotal * 2.54;
+
+      const waistFeet = parseFloat(document.getElementById('waistFeet').value);
+      const waistInches = parseFloat(document.getElementById('waistInches').value);
+      const waistInchesTotal = (waistFeet * 12) + waistInches;
+      const waistCm = waistInchesTotal * 2.54;
+
+      let bodyFat = 0;
+
+      if (gender === 'male') {
+        // U.S. Navy Method for males
+        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waistCm - neckCm) + 0.15456 * Math.log10(heightCm)) - 450;
+      } else if (gender === 'female') {
+        // U.S. Navy Method for females without hip measurement
+        // Note: This is a simplified version and may not be as accurate
+        bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waistCm + neckCm) + 0.22100 * Math.log10(heightCm)) - 450;
+      } else {
+        alert('Please select a gender.');
+        return;
+      }
+
+      bodyFat = bodyFat.toFixed(2);
+
+      // Calculate BMI
+      const heightMeters = heightCm / 100;
+      const bmi = (weight / (heightMeters * heightMeters)).toFixed(2);
+
+      // Calculate Lean Body Mass
+      const leanBodyMass = (weight * (1 - (bodyFat / 100))).toFixed(2);
+
+      document.getElementById('result').innerHTML = `
+        Estimated Body Fat Percentage: ${bodyFat}%<br/>
+        BMI: ${bmi}<br/>
+        Lean Body Mass: ${leanBodyMass} kg
+      `;
+    });
+  </script>
+</body>
+</html>
