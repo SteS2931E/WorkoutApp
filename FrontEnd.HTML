@@ -1,0 +1,134 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: #4a5568;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .section h2 {
+      margin-top: 0;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏋️FitFusion🏋</h1>
+    <p>Track your fitness journey and stay motivated!</p>
+  </header>
+
+  <nav>
+    <a href="workoutSetup.html">Log Workout</a>
+    <a href="fatPorcentage.html">Calculate fat %</a>
+    <a href="https://www.nutrition.gov/topics/exercise-and-fitness">Resources</a>
+    <a href="https://www.fitnessblender.com/" target="_blank">Fitness Blender</a>
+  </nav>
+
+  <main>
+    <div class="section">
+      <h2>Welcome to FitFusion!</h2>
+      <p>Start tracking your workouts to monitor your progress and achieve your fitness goals.</p>
+    </div>
+
+<div class="section">
+  <h2>Generate Healthy Recipe</h2>
+  <input type="file" id="imageInput" accept="image/*" />
+  <button onclick="uploadAndGenerate()">Generate Recipe</button>
+  <div id="recipeResult" style="margin-top: 20px;"></div>
+</div>
+
+<!--
+    <div class="section">
+      <h2>Quick Links</h2>
+      <ul>
+        <li><a href="index.html">Log a New Workout</a></li>
+        <li><a href="progress.html">View Your Progress</a></li>
+        <li><a href="https://www.nutrition.gov/topics/exercise-and-fitness">Fitness Resources</a></li>
+      </ul>
+    </div> -->
+	
+  </main>
+
+<script>
+  async function uploadAndGenerate() {
+    const input = document.getElementById("imageInput");
+    const file = input.files[0];
+    if (!file) {
+      alert("Please select an image first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/generate-recipe", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      const resultDiv = document.getElementById("recipeResult");
+      if (data.recipe) {
+        resultDiv.innerText = data.recipe;
+      } else {
+        resultDiv.innerText = "Error: " + data.error;
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Something went wrong. Check the console for details.");
+    }
+  }
+</script>
+
+
+  <footer>
+    &copy; 2025 Workout Tracker. All rights reserved.
+  </footer>
+</body>
+</html>
