@@ -44,9 +44,44 @@
       margin-bottom: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+	
+	 .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .cta-buttons button {
+      background-color: #3182ce;
+      border: none;
+      padding: 12px 24px;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .cta-buttons button:hover {
+      background-color: #2b6cb0;
+    }
   </style>
 </head>
 <body>
+
+<header>
+    
+    <div class="cta-buttons">
+	<button onclick="location.href='index.html'">Home</button>
+      <button onclick="location.href='workoutSetup.html'">Log Workout</button>
+      <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
+      <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
+    </div>
+  </header>
+  
+  <br>
+  
   <div class="container">
     <h1 style="text-align: center;">🏋️ Workout Tracker</h1>
 
