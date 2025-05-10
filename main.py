@@ -1,34 +1,41 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from google.generativeai import GenerativeModel, configure
+from google import genai
 from dotenv import load_dotenv
 import base64
 import os
 
 # Load environment variables
 load_dotenv()
-configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Initialize FastAPI app
+# Initialize FastAPI app (only ONCE)
 app = FastAPI()
 
-# Enable CORS (so frontend can talk to backend)
+# Enable CORS so your frontend can talk to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Replace with frontend URL in production
+    allow_origins=["*"],  # Replace with your frontend's URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Define the /upload endpoint
+# Utility function to base64-encode image
+def encode_image_to_base64(image_bytes):
+    return base64.b64encode(image_bytes).decode("utf-8")
+
+# Endpoint 1: Generic image description
 @app.post("/upload")
 async def upload_image(image: UploadFile = File(...)):
     try:
         image_bytes = await image.read()
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+        image_base64 = encode_image_to_base64(image_bytes)
 
-        model = GenerativeModel("gemini-pro-vision")
+        if "image" not in image.content_type:
+            raise HTTPException(status_code=400, detail="Invalid image file type")
+
+        model = genai.GenerativeModel("gemini-pro-vision")
         response = model.generate_content([
             "What is in this image?",
             {
@@ -41,17 +48,17 @@ async def upload_image(image: UploadFile = File(...)):
         return {"result": response.text}
     except Exception as e:
         return {"error": str(e)}
-# ✅ NEW route: generate a healthy recipe
+
+# Endpoint 2: Nutritionist recipe generation
 @app.post("/generate-recipe")
 async def generate_recipe(image: UploadFile = File(...)):
     try:
+        if "image" not in image.content_type:
+            raise HTTPException(status_code=400, detail="File is not an image.")
+
         image_bytes = await image.read()
         image_base64 = encode_image_to_base64(image_bytes)
 
-        if "image" not in image.content_type:
-            raise HTTPException(status_code=400, detail="Invalid image file type")
-
-        model = GenerativeModel("gemini-pro-vision")
         prompt = (
             "You are a certified nutritionist. Analyze the ingredients in this image "
             "and create a healthy recipe using them. "
@@ -65,6 +72,7 @@ async def generate_recipe(image: UploadFile = File(...)):
             "- Portion size suggestion"
         )
 
+        model = genai.GenerativeModel("gemini-pro-vision")
         response = model.generate_content([
             prompt,
             {
@@ -74,8 +82,6 @@ async def generate_recipe(image: UploadFile = File(...)):
                 }
             }
         ])
-
         return {"recipe": response.text}
-    
     except Exception as e:
         return {"error": str(e)}
