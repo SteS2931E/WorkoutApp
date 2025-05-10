@@ -1,13 +1,15 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from google import genai
+import easygui
+import google.generativeai as genai
+import mimetypes
 from dotenv import load_dotenv
 import base64
 import os
 
 # Load environment variables
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=os.getenv("AIzaSyAIu8QNSVxgTNZJ5bS_FfN_7Wn3A5Cg3gM"))
 
 # Initialize FastAPI app (only ONCE)
 app = FastAPI()
@@ -35,7 +37,7 @@ async def upload_image(image: UploadFile = File(...)):
         if "image" not in image.content_type:
             raise HTTPException(status_code=400, detail="Invalid image file type")
 
-        model = genai.GenerativeModel("gemini-pro-vision")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         response = model.generate_content([
             "What is in this image?",
             {
@@ -72,7 +74,7 @@ async def generate_recipe(image: UploadFile = File(...)):
             "- Portion size suggestion"
         )
 
-        model = genai.GenerativeModel("gemini-pro-vision")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         response = model.generate_content([
             prompt,
             {
