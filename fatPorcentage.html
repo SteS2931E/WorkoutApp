@@ -10,6 +10,29 @@
       background: #f0f4f8;
       padding: 20px;
     }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .cta-buttons button {
+      background-color: #3182ce;
+      border: none;
+      padding: 12px 24px;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .cta-buttons button:hover {
+      background-color: #2b6cb0;
+    }
+
     .container {
       max-width: 600px;
       margin: auto;
@@ -18,15 +41,18 @@
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 20px;
     }
+
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -34,13 +60,16 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+
     .flex-inputs {
       display: flex;
       gap: 10px;
     }
+
     .flex-inputs input {
       flex: 1;
     }
+
     button {
       width: 100%;
       padding: 12px;
@@ -52,18 +81,64 @@
       cursor: pointer;
       font-size: 16px;
     }
+
     button:hover {
       background-color: #0056b3;
     }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
+
+    .result-card {
+      margin-top: 30px;
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       text-align: center;
-      font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .result-card h2 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .metric {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+
+    .bar-container {
+      background-color: #e0e0e0;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 20px;
+      margin-top: 5px;
+    }
+
+    .bar {
+      height: 100%;
+      background-color: #4caf50;
+      transition: width 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+
+  <header>
+    <div class="cta-buttons">
+      <button onclick="location.href='index.html'">Home</button>
+      <button onclick="location.href='workoutSetup.html'">Log Workout</button>
+      <button onclick="location.href='fatPorcentage.html'">Calculate Fat %</button>
+      <button onclick="location.href='https://www.nutrition.gov/topics/exercise-and-fitness'">Resources</button>
+    </div>
+  </header>
+
+  <br>
+
   <div class="container">
     <h1>Body Fat Calculator</h1>
     <form id="bfForm">
@@ -100,7 +175,8 @@
 
       <button type="submit">Calculate Body Fat %</button>
     </form>
-    <div class="result" id="result"></div>
+
+    <div id="result"></div>
   </div>
 
   <script>
@@ -129,11 +205,8 @@
       let bodyFat = 0;
 
       if (gender === 'male') {
-        // U.S. Navy Method for males
         bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waistCm - neckCm) + 0.15456 * Math.log10(heightCm)) - 450;
       } else if (gender === 'female') {
-        // U.S. Navy Method for females without hip measurement
-        // Note: This is a simplified version and may not be as accurate
         bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waistCm + neckCm) + 0.22100 * Math.log10(heightCm)) - 450;
       } else {
         alert('Please select a gender.');
@@ -141,18 +214,35 @@
       }
 
       bodyFat = bodyFat.toFixed(2);
-
-      // Calculate BMI
       const heightMeters = heightCm / 100;
       const bmi = (weight / (heightMeters * heightMeters)).toFixed(2);
-
-      // Calculate Lean Body Mass
       const leanBodyMass = (weight * (1 - (bodyFat / 100))).toFixed(2);
 
       document.getElementById('result').innerHTML = `
-        Estimated Body Fat Percentage: ${bodyFat}%<br/>
-        BMI: ${bmi}<br/>
-        Lean Body Mass: ${leanBodyMass} kg
+        <div class="result-card">
+          <h2>Your Health Stats 🚀</h2>
+
+          <div class="metric">
+            <strong>Body Fat:</strong> ${bodyFat}%
+            <div class="bar-container">
+              <div class="bar" style="width: ${bodyFat > 40 ? 100 : bodyFat * 2.5}%; background-color: ${bodyFat < 18 ? '#2196f3' : bodyFat < 25 ? '#4caf50' : '#f44336'};"></div>
+            </div>
+          </div>
+
+          <div class="metric">
+            <strong>BMI:</strong> ${bmi}
+            <div class="bar-container">
+              <div class="bar" style="width: ${bmi > 40 ? 100 : bmi * 2.5}%; background-color: ${bmi < 18.5 ? '#2196f3' : bmi < 25 ? '#4caf50' : '#ff9800'};"></div>
+            </div>
+          </div>
+
+          <div class="metric">
+            <strong>Lean Body Mass:</strong> ${leanBodyMass} kg
+            <div class="bar-container">
+              <div class="bar" style="width: ${Math.min(leanBodyMass, 100)}%; background-color: #8bc34a;"></div>
+            </div>
+          </div>
+        </div>
       `;
     });
   </script>
