@@ -255,10 +255,31 @@
       overflow: hidden;     /* Ensures overflow is hidden */
       text-overflow: ellipsis; /* If quote is too long, shows "..." */
     }
+	
+	.home-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.home-logo img {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.home-logo img:hover {
+  transform: scale(1.1);
+}
+
   </style>
 </head>
 <body>
-
+<a href="index.html" class="home-logo">
+  <img src="FitFusion Logo.png" alt="Home" />
+</a>
   <header>
     <h1>Welcome to FitFusion!</h1>
     <p>Track your progress, crush your goals, and transform your body with our state-of-the-art fitness platform.</p>
